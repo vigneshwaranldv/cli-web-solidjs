@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch: {}
 
 jobs:
   deploy:
@@ -26,7 +27,7 @@ jobs:
       id: changes
       run: |
         git fetch origin main
-        git diff --name-only ${{ github.event.before }} ${{ github.sha }} > changes.txt
+        git diff --name-only $(git rev-parse HEAD^) HEAD > changes.txt || echo "" > changes.txt
         if grep -E '^(src/web|src/shared)/' changes.txt; then
           echo "web_changed=true" >> $GITHUB_ENV
         else
