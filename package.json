@@ -1,0 +1,43 @@
+{
+  "name": "cli-web-solidjs",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "build/cli/index.js",
+  "bin": "build/cli/index.js",
+  "scripts": {
+    "cli": "tsx src/cli/index.ts",
+    "cli:build": "tsc -p tsconfig.cli.json && node build/cli/index.js",
+    "web:dev": "vite",
+    "web:build": "vite build",
+    "web:preview": "vite preview",
+    "predeploy": "npm run web:build",
+    "deploy": "gh-pages -d dist"
+  },
+  "dependencies": {
+    "chalk": "^5.2.0",
+    "commander": "^10.0.0",
+    "inquirer": "^9.2.7",
+    "solid-js": "^1.7.10",
+    "table": "^6.8.1"
+  },
+  "devDependencies": {
+    "@types/inquirer": "^9.0.3",
+    "@types/node": "^20.5.1",
+    "gh-pages": "^5.0.0",
+    "ts-node": "^10.9.1",
+    "tsx": "^4.19.3",
+    "typescript": "^5.2.2",
+    "vite": "^4.4.9",
+    "vite-plugin-solid": "^2.11.6"
+  },
+  "pkg": {
+    "scripts": [
+      "build/shared/*.js"
+    ],
+    "targets": [
+      "node18-win-x64",
+      "node18-linux-x64",
+      "node18-macos-x64"
+    ]
+  }
+}

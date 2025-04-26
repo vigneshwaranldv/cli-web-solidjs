@@ -1,0 +1,45 @@
+name: Deploy Web App to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Check if Web App code changed
+      id: changes
+      run: |
+        git fetch origin main
+        git diff --name-only ${{ github.event.before }} ${{ github.sha }} > changes.txt
+        if grep -E '^(src/web|src/shared)/' changes.txt; then
+          echo "web_changed=true" >> $GITHUB_ENV
+        else
+          echo "web_changed=false" >> $GITHUB_ENV
+        fi
+
+    - name: Build Web App
+      if: env.web_changed == 'true'
+      run: npm run web:build
+
+    - name: Deploy to GitHub Pages
+      if: env.web_changed == 'true'
+      uses: peaceiris/actions-gh-pages@v4
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./dist
